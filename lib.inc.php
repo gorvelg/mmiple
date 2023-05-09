@@ -88,6 +88,20 @@ function afficherPanier($co) {
     $tablePanier='<table id="tablePanier">'."\n";   
     $tablePanier.='<thead><th>Jeu</th><th>Prix</th>   
     <th>Quantité</th><th>Total</th></thead>'."\n"; 
+    // boucle pour generer les lignes du tableau
+    foreach ($_SESSION['panier'] as $produit) {
+        $nom = $produit['nom'];
+        $prix = $produit['prix'];
+        $quantite = $produit['quantité'];
+    
+        $tablePanier .= '<tr>';
+        $tablePanier .= '<td>' . $nom . '</td>';
+        $tablePanier .= '<td>' . $prix . '</td>';
+        $tablePanier .= '<td>' . $quantite . '</td>';
+        $tablePanier .= '<td>' . $prix * $quantite . '</td>';
+        $tablePanier .= '</tr>';
+    }
+
     $tablePanier.='</table>'."\n";  
     }
     
