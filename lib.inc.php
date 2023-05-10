@@ -88,12 +88,13 @@ function afficherPanier($co) {
         $tablePanier.='<thead><th colspan="2">Jeu</th><th>Prix</th><th>Quantité</th><th>Total</th></thead>'."\n"; 
 
         $co = connexionBD();
-
+        $total = 0;
         // boucle pour générer les lignes du tableau
         foreach ($_SESSION['panier'] as $idJeu => $produit) {
             $nom = $produit['nom'];
             $prix = $produit['prix'];
             $quantite = $produit['quantité'];
+            $total += $prix * $quantite;
 
             $req = "SELECT * FROM mmiple_jeux WHERE jeu_code=$idJeu";
             $jeux = $co->query($req);
@@ -108,7 +109,11 @@ function afficherPanier($co) {
             $tablePanier .= '<td>' . $prix * $quantite . '</td>';
             $tablePanier .= '</tr>';
         }
-
+        $tablePanier .= '<tr>';
+        $tablePanier .= '<td colspan="4" style="text-align:right"><strong>Total :</strong></td>';
+        $tablePanier .= '<td>' . $total . '</td>';
+        $tablePanier .= '</tr>';
+        $tablePanier .= '</table>'."\n";
     }
 
     return $tablePanier;
