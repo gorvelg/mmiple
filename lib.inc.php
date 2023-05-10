@@ -81,30 +81,35 @@ function paniertotaljeux($panier) {
 
 
 function afficherPanier($co) {
+    if (empty($_SESSION['panier'])) {
+        $tablePanier='<p class="erreur">Désolé, votre panier est vide !</p>';
+    } else {
+        $tablePanier='<table id="tablePanier">'."\n";   
+        $tablePanier.='<thead><th colspan="2">Jeu</th><th>Prix</th><th>Quantité</th><th>Total</th></thead>'."\n"; 
 
-    if (empty($_SESSION['panier'])) { // la panier est vide ? 
-    
-    $tablePanier='<p class="erreur">Désolé, votre panier est vide !</p>'; } else { // sinon le panier contient quelque chose    
-    $tablePanier='<table id="tablePanier">'."\n";   
-    $tablePanier.='<thead><th>Jeu</th><th>Prix</th>   
-    <th>Quantité</th><th>Total</th></thead>'."\n"; 
-    // boucle pour generer les lignes du tableau
-    foreach ($_SESSION['panier'] as $produit) {
-        $nom = $produit['nom'];
-        $prix = $produit['prix'];
-        $quantite = $produit['quantité'];
-    
-        $tablePanier .= '<tr>';
-        $tablePanier .= '<td>' . $nom . '</td>';
-        $tablePanier .= '<td>' . $prix . '</td>';
-        $tablePanier .= '<td>' . $quantite . '</td>';
-        $tablePanier .= '<td>' . $prix * $quantite . '</td>';
-        $tablePanier .= '</tr>';
+        $co = connexionBD();
+
+        // boucle pour générer les lignes du tableau
+        foreach ($_SESSION['panier'] as $idJeu => $produit) {
+            $nom = $produit['nom'];
+            $prix = $produit['prix'];
+            $quantite = $produit['quantité'];
+
+            $req = "SELECT * FROM mmiple_jeux WHERE jeu_code=$idJeu";
+            $jeux = $co->query($req);
+            foreach($jeux as $unjeu) {
+                $image = $unjeu['jeu_photo1'];
+            }
+
+            $tablePanier .= '<tr>';
+            $tablePanier .= '<td colspan="2"><img src="' . $image . '" alt="photo jeu" width="80px">' . $nom . '</td>';
+            $tablePanier .= '<td>' . $prix . '</td>';
+            $tablePanier .= '<td> <span class="fondRouge"> <a href="modif_quantite_jeu.php?jeu_id='.$idJeu.'&quantite='.$quantite.'&action=supprimer">-</a> </span>' . $quantite . '<span class="fondRouge"><a href="modif_quantite_jeu.php?jeu_id='.$idJeu.'&quantite='.$quantite.'&action=ajouter">+</a></span></td>';
+            $tablePanier .= '<td>' . $prix * $quantite . '</td>';
+            $tablePanier .= '</tr>';
+        }
+
     }
 
-    $tablePanier.='</table>'."\n";  
-    }
-    
     return $tablePanier;
-    
-    }
+}

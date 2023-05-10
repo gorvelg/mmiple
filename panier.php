@@ -15,6 +15,11 @@
         $co=connexionBD();
         echo afficherPanier($co);
         deconnexionBD($co);
+    
+    
+      
+
+
     ?>
 </p>
 
